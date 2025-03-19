@@ -1,0 +1,208 @@
+body{
+    background-color:#f7f4e5;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    margin:0px;
+}
+#aL{
+    width:100%;
+    height:30px;
+    background-color: rgb(34, 33, 33);
+    position: relative;
+    top:0%;
+    }
+#address a{
+    text-decoration:none;
+    float:left;
+    margin-top:5px;
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;}
+#accWindow{
+    text-decoration: none;
+    color:white;
+    box-sizing: content-box;
+    float:right;
+    height: 24px;
+    border:2px solid black;
+    background-color: rgb(34, 33, 33);
+    color:black;
+    font-size:large;
+    color:white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    padding:1px;
+}
+.acc_img{
+    width:20px;
+    margin-right: 5px;
+    position: relative;
+    top:2px;
+}
+
+#accWindow:hover{
+    border:2px solid white;
+    cursor: pointer;
+}
+#logo_header>img{
+    width: 21px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+#map{
+    width:22px;
+}
+#page_cont{
+    width:80%;
+    margin:auto;
+    margin-top:25px;
+}
+#pren_cont{
+    display: flex;
+    border: 15px solid #dcd3ba;
+    background-image: linear-gradient(white,#f7f4e5);
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    height: 75vh;
+    background-color: white;
+}
+#req,#req_mod{
+    cursor: pointer;
+    font-size: medium;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+#titolo{
+    font-size: x-large;
+    margin-top: 40px;
+    text-decoration: underline;
+    text-decoration-color: #dcd3ba;
+}
+input{
+    margin-bottom: 20px;
+    margin-top: 15px;
+}
+select{
+    width:15vh;
+    margin-bottom: 20px;
+    cursor: pointer;
+    background-color: white;
+}
+#close_wind_ov{
+    display: inline;
+    float:right;
+    background-color: #f7f4e5;
+    border:none;
+}
+#close_wind_ov:hover{
+    cursor: pointer;
+}
+#close{
+    width:20px;
+}
+#form_cont{
+    background-image: linear-gradient(white,#f7f4e5);
+    border:15px solid #dcd3ba;
+    width:100vh;
+    height:min-content;
+    min-height: 30vh;
+    max-height: 47vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: large;
+}
+#flex{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 24px;
+}
+.dinamic{
+    display: block;
+    float:left;
+}
+
+#data_arrivo{
+    font-style: italic;
+
+}
+#data_arrivo:hover{
+    background-color: lightgray;
+}
+#data_partenza{
+    font-style: italic;
+}
+#data_partenza:hover{
+    background-color: lightgrey;
+}
+
+#change_page{
+    display: flex;
+    float: right;
+    width: max-content;
+   
+}
+#prenota{
+    border-bottom-left-radius: 10px;
+    border:none;
+    background-color: #dcd3ba;
+}
+#my_pren{
+    border:none;
+    border-bottom-right-radius: 10px;
+    background-color: #dcd3ba;
+    opacity:0.5;
+}
+#prenota:hover{
+    opacity: 1;
+}
+#my_pren:hover{
+    opacity: 1;
+}
+#gest_cont{
+    margin:40px;
+    margin-top: 0;
+    font-size: medium;
+}
+
+.modify{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    cursor: pointer;
+    border:1px solid black;
+    border-radius: 2px;
+    background-color: whitesmoke;
+}
+.modify:hover{
+    border:1px solid black;
+    background-color: lightgrey;
+}
+.selected{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+cursor: pointer;
+border:1px solid black;
+border-radius: 2px;
+background-color: lightgrey;
+
+}
+
+/*EFFETTO OVERLAY*/
+.overlay{
+    display: block;
+    position: fixed;
+    right: 30%;
+    left:30%;
+    top: 15%;
+    font-size: 40px;
+    text-align: center;
+    background-color: #f7f4e5;;
+    z-index: 2;
+    padding:15px;
+    border:5px solid rgb(34, 33, 33);
+    border-radius: 10px;
+}
+.blurred{
+    filter: grayscale(50%) blur(5px);
+}
+#divDel{
+    font-size: large;
+}
+.choise_but{
+    font-size: medium;
+}

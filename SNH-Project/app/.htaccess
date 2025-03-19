@@ -1,0 +1,40 @@
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "csrf.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "send_email.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files ".env">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "composer.json">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "composer.lock">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "logs/novelist-app.log">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<IfModule mod_headers.c>
+    Header set Content-Security-Policy "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;"
+</IfModule>
+
+

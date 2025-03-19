@@ -1,0 +1,131 @@
+
+
+body{
+    background-color: #f7f4e5;
+    margin:0;
+}
+#aL{
+    width:100%;
+    height:30px;
+    background-color: rgb(34, 33, 33);
+    position: relative;
+    top:0%;
+    }
+#address a{
+    text-decoration:none;
+    float:left;
+    margin-top:5px;
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;}
+#accWindow{
+    text-decoration: none;
+    color:white;
+    box-sizing: content-box;
+    float:right;
+    height: 24px;
+    border:2px solid black;
+    background-color: rgb(34, 33, 33);
+    color:black;
+    font-size:large;
+    color:white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    padding:1px;
+}
+.acc_img{
+    height:19px;
+}
+#accWindow:hover{
+    border:2px solid white;
+    cursor: pointer;
+}
+#logo_header>img{
+    width: 21px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+#map{
+    width:22px;
+}
+.desc_cont{
+    opacity: 1;
+    width:95%;
+    margin:auto;
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items:center;
+    }
+.art_cont{
+    opacity: 1;
+    flex-basis: 50%;
+    padding:0;
+    padding-left: 50px;
+    background-color: #dcd3ba;
+    transition: opacity .5s ease-in-out;
+}
+.im_desc{
+    opacity: 1;
+    width:450px;
+    align-self: center;
+    transition: opacity .8s ease-in;
+}
+.art{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    padding:40px;
+    text-align: center;
+    background-color: white;
+    color:black;
+    font-size: large;
+   }  
+.choise_but{
+    font-size: medium;
+}
+.active{
+    font-size:medium;
+}
+/*EFFETTO OVERLAY*/
+.overlay{
+    display: block;
+    position: fixed;
+    right: 30%;
+    left:30%;
+    top:0;
+    font-size: 40px;
+    text-align: center;
+    background-color: #f7f4e5;;
+    z-index: 2;
+    padding:5px;
+    border:5px solid rgb(34, 33, 33);
+    border-radius: 10px;
+}
+.blurred{
+    filter: grayscale(50%) blur(5px);
+}
+#divDel>p{
+    margin-bottom: 0px;
+    margin-top:20px;
+}
+#close_wind_ov{
+    display: inline;
+    float:right;
+    background-color: #f7f4e5;
+    border:none;
+}
+#close_wind_ov:hover{
+    cursor: pointer;
+}
+#close{
+    width:20px;
+}
+.end_but{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-decoration: none;
+    color:black;
+    border:1px solid black;
+    background-color: buttonface;
+    font-size: medium;
+    border-radius: 3px;
+    padding:4px;
+    cursor: pointer;
+}
