@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Imposta i percorsi delle librerie
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
+export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
+
+# Comando di compilazione
+gcc -o server server.c -I/usr/local/ssl/include -L/usr/local/ssl/lib -lssl -lcrypto
+
+# Verifica la compilazione
+if [ $? -eq 0 ]; then
+    echo "Compilazione riuscita"
+else
+    echo "Errore durante la compilazione"
+fi
