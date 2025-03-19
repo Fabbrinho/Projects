@@ -1,0 +1,242 @@
+openapi: 3.0.0
+info:
+  title: Payment API
+  version: 1.0.0
+  description: API for handling payments, transactions, and user balances.
+
+servers:
+  - url: https://localhost:5006/payment_service
+
+paths:
+  /pay:
+    post:
+      summary: Make a payment from a user to another
+      description: Allows a user to make a payment to another user by transferring a specified amount.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                payer_us:
+                  type: string
+                  description: Username of the payer.
+                receiver_us:
+                  type: string
+                  description: Username of the receiver.
+                amount:
+                  type: string
+                  description: Amount to be transferred (in Memecoins).
+              required:
+                - payer_us
+                - receiver_us
+                - amount
+      responses:
+        '200':
+          description: Payment successfully executed.
+        '400':
+          description: Invalid request data, such as missing payer or receiver, or invalid amount.
+        '404':
+          description: User balance not found.
+        '422':
+          description: Insufficient balance to complete the payment.
+
+  /buycurrency:
+    post:
+      summary: Purchase in-game currency (Memecoins).
+      description: Allows a user to purchase in-game currency using real money.
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token for authentication. Format: `Bearer <token>`.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The username of the user purchasing the currency.
+                amount:
+                  type: string
+                  description: The amount of money being spent to buy Memecoins.
+                payment_method:
+                  type: string
+                  description: The payment method used for the transaction (e.g. card).
+              required:
+               - username
+               - amount
+               - payment_method
+      responses:
+        '200':
+          description: Currency purchase completed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: "user1"
+                  balance:
+                    type: number
+                    example: 100
+                  msg:
+                    type: string
+                    example: "In-game currency purchased successfully"
+        '400':
+          description: Invalid request data, such as missing parameters.
+        '401':
+          description: Unauthorized request due to missing or invalid token.
+        '403':
+          description: The username in the token does not match the username in the request body.
+        '404':
+          description: User not found.
+        '500':
+          description: Internal server error or payment processing issue.
+
+  /viewTrans:
+    get:
+      summary: View transactions for a specific user.
+      description: Fetches a list of all transactions (sent and received) for a specified user.
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token for authentication. Format: `Bearer <token>`.
+          schema:
+            type: string
+        - name: username
+          in: query
+          required: true
+          description: Username of the user whose transactions are being queried.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of transactions for the user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    payer_us:
+                      type: string
+                      example: "user123"
+                    receiver_us:
+                      type: string
+                      example: "user456"
+                    amount:
+                      type: string
+                      example: "+10.0"
+                    currency:
+                      type: string
+                      example: "Memecoins"
+                    date:
+                      type: string
+                      format: date-time
+                      example: "2024-11-28T15:30:00"
+        '400':
+          description: Invalid username parameter.
+        '401':
+          description: Unauthorized request due to missing or invalid token.
+        '403':
+          description: The username in the token does not match the username in the request body.
+  
+  /newBalance:
+    post:
+      summary: Create a new balance for a user.
+      description: Creates a new balance entry for the user if it doesn't exist already.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The username of the user for whom the balance is being created.
+              required:
+                - username
+      responses:
+        '200':
+          description: Balance created successfully for the user.
+        '400':
+          description: Invalid or missing username parameter.
+        '422':
+          description: The username already exists in the balance database.
+        '500':
+          description: Error committing the transaction.
+
+  /getBalance:
+    get:
+      summary: Get the balance for a specific user.
+      description: Returns the current balance of the specified user.
+      parameters:
+        - name: username
+          in: query
+          required: true
+          description: The username of the user whose balance is being queried.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved the user's balance.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: "user1"
+                  balance:
+                    type: number
+                    example: 50
+        '400':
+          description: Invalid username parameter.
+        '403':
+          description: The username in the token does not match the username in the request body.
+        '404':
+          description: User not found in the balance database.
+        '401':
+          description: Unauthorized request due to missing or invalid token.
+
+  /deleteBalance:
+    delete:
+      summary: Delete a user's balance.
+      description: Removes the balance entry for the specified user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The username of the user whose balance is being deleted.
+              required:
+                - username
+      responses:
+        '200':
+          description: Successfully deleted the user's balance.
+        '400':
+          description: Invalid or missing username parameter.
+        '404':
+          description: The balance for the specified user does not exist.
+        '500':
+          description: Error committing the transaction.
+

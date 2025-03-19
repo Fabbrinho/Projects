@@ -1,0 +1,241 @@
+services:
+
+  admin_gateway:
+    build: ./admin_gateway
+    ports:
+      - 5009:5009
+    secrets:
+      - auction_cert
+      - auction_key
+    depends_on:
+      - auth_service
+      - auth_db
+      - profile_setting
+      - profile_db
+      - db_gachasystem
+      - gachasystem
+      - auction_db
+      - auction_service
+
+  gateway:
+    build: ./gateway
+    ports:
+      - 5001:5001
+    secrets:
+      - gateway_cert
+      - gateway_key
+    depends_on:
+      - auth_service
+      - auth_db
+      - profile_setting
+      - profile_db
+      - db_gachasystem
+      - gachasystem
+      - db_payment
+      - payment_service
+      - gacha_roll
+      - auction_db
+      - auction_service
+
+  auth_db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: auth_db
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+      - ./authentication_service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  auth_service:
+    build: ./authentication_service
+    ports:
+      - "5002:5002"
+    secrets:
+      - authentication_cert
+      - authentication_key
+    volumes:
+      - ./RSAkeys:/app/RSAkeys:ro  # Monta la directory delle chiavi in sola lettura
+    environment:
+      - DATABASE_URI=postgresql://user:password@auth_db:5432/auth_db
+      #- JWT_SECRET_KEY=super-secret-key
+      - PRIVATE_KEY_PATH=/app/RSAkeys/private_key.pem
+      - PUBLIC_KEY_PATH=/app/RSAkeys/public_key.pem
+    depends_on:
+      - auth_db
+
+  profile_db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: profile_db
+    volumes:
+      - profile_data:/var/lib/postgresql/data
+      - ./profile_setting/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+
+  profile_setting:
+    build: ./profile_setting
+    volumes:
+      - profile_images:/app/static/uploads  # Monta il volume nella cartella del server per contenere le immagini dei memes
+      - ./RSApublickey:/app/RSAkeys:ro  # Monta la directory delle chiavi in sola lettura
+    ports:
+      - "5003:5003"
+    secrets:
+      - profile_cert
+      - profile_key
+    environment:
+      - DATABASE_URI=postgresql://user:password@profile_db:5432/profile_db
+      #- JWT_SECRET_KEY=super-secret-key
+      - PUBLIC_KEY_PATH=/app/RSAkeys/public_key.pem
+    depends_on:
+      - profile_db
+  
+  db_gachasystem:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user           # username to access the database
+      POSTGRES_PASSWORD: password   # password of the user
+      POSTGRES_DB: memes_db          # name of the database
+    volumes:
+      - memes_data:/var/lib/postgresql/data   # monta spazio persistente per salvare i dati del database
+      - ./gachasystem_service/db/init.sql:/docker-entrypoint-initdb.d/init.sql  # monta uno spazio di inizializzazione nel percorso predefinito di Docker per eseguire script all'avvio del database
+    ports:
+      - "5434:5432"   # mappa la porta del container 5432 (a destra), porta predefinita di PostgreSQL, sulla stessa porta dell'host (a sinistra)
+  
+  gachasystem:
+    build: ./gachasystem_service
+    container_name: gachasystem
+    restart: always   # policy on failure
+    volumes:
+      - meme_images:/app/static/uploads  # Monta il volume nella cartella del server per contenere le immagini dei memes
+      - ./RSApublickey:/app/RSAkeys:ro  # Monta la directory delle chiavi in sola lettura
+    ports:
+      - "5004:5004" # mappa la porta del container 5001 (destra) sulla stessa porta dell'host
+    secrets:
+      - gachasystem_cert
+      - gachasystem_key
+    environment:
+      - DATABASE_URI=postgresql://user:password@db_gachasystem:5432/memes_db   # variabile d'ambiente che specifica l'uri per connettersi al db
+      - PUBLIC_KEY_PATH=/app/RSAkeys/public_key.pem
+      #- JWT_SECRET_KEY=super-secret-key
+    depends_on:
+      - db_gachasystem
+  # Database per Payment Service
+  db_payment:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: trans_db
+    volumes:
+      - payment_data:/var/lib/postgresql/data
+      - ./payment_service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5435:5432"
+  # Payment Service
+  payment_service:
+    build: ./payment_service
+    ports:
+      - "5006:5006"
+    volumes:
+      - ./RSApublickey:/app/RSAkeys:ro  # Monta la directory delle chiavi in sola lettura
+    secrets:
+      - payment_cert
+      - payment_key
+    environment:
+      - DATABASE_URI=postgresql://user:password@db_payment:5432/trans_db
+      - PUBLIC_KEY_PATH=/app/RSAkeys/public_key.pem
+     # - JWT_SECRET_KEY=super-secret-key
+    depends_on:
+      - db_payment
+
+  gacha_roll:
+      build: ./gacharoll_service
+      container_name: gacharoll
+      restart: always
+      ports:
+        - "5007:5007"
+      secrets:
+        - gacharoll_cert
+        - gacharoll_key
+      volumes:
+        - ./RSApublickey:/app/RSAkeys:ro  # Monta la directory delle chiavi in sola lettura
+      environment:
+        - PUBLIC_KEY_PATH=/app/RSAkeys/public_key.pem
+      depends_on:
+        - gachasystem
+        - payment_service
+
+  auction_db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: auction_db
+    volumes:
+      - auction_data:/var/lib/postgresql/data
+      - ./auction_market_service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5436:5432"
+
+  auction_service:
+    build: ./auction_market_service
+    ports:
+      - "5008:5008"
+    secrets:
+      - auction_cert
+      - auction_key
+    volumes:
+      - ./RSApublickey:/app/RSAkeys:ro  # Monta la directory delle chiavi in sola lettura
+    environment:
+      - DATABASE_URI=postgresql://user:password@auction_db:5432/auction_db
+      - PUBLIC_KEY_PATH=/app/RSAkeys/public_key.pem
+      #- JWT_SECRET_KEY=super-secret-key
+    depends_on:
+      - auction_db
+volumes:
+  profile_data:
+  profile_images:
+  auth_data:
+  memes_data:  # definisce il volume Docker meme_data per salvare in modo persistente i dati del database
+  meme_images:
+  payment_data:
+  auction_data:
+secrets:
+  auction_cert:
+    file: ./auction_market_service/auction_cert.pem
+  auction_key:
+    file: ./auction_market_service/auction_key.pem
+  profile_cert:
+    file: ./profile_setting/profile_cert.pem
+  profile_key:
+    file: ./profile_setting/profile_key.pem
+  authentication_cert:
+    file: ./authentication_service/authentication_cert.pem
+  authentication_key:
+    file: ./authentication_service/authentication_key.pem
+  gacharoll_cert:
+    file: ./gacharoll_service/gacharoll_cert.pem
+  gacharoll_key:
+    file: ./gacharoll_service/gacharoll_key.pem
+  gachasystem_cert:
+    file: ./gachasystem_service/gachasystem_cert.pem
+  gachasystem_key:
+    file: ./gachasystem_service/gachasystem_key.pem
+  payment_cert:
+    file: ./payment_service/payment_cert.pem
+  payment_key:
+    file: ./payment_service/payment_key.pem
+  gateway_cert:
+    file: ./gateway/gateway_cert.pem
+  gateway_key:
+    file: ./gateway/gateway_key.pem
+  admingateway_cert:
+    file: ./admin_gateway/admingateway_cert.pem
+  admingateway_key:
+    file: ./admin_gateway/admingateway_key.pem

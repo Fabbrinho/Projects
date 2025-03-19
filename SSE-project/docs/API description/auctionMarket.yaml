@@ -1,0 +1,294 @@
+openapi: 3.0.0
+info:
+  title: Auction Market Api
+  version: 1.0.0
+  description: API for managing auctions, including creation, modification, bidding, see, and closure.
+
+servers:
+  - url: https://localhost:5008/auction_service
+paths:
+  /see:
+    get:
+      summary: Retrieve auctions
+      description: Returns a specific auction by `auction_id` or all active auctions if no ID is provided.
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token for authentication.
+          schema:
+            type: string
+        - name: auction_id
+          in: query
+          required: false
+          description: The ID of the auction to retrieve.
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          description: Status of the auctions to filter. Defaults to `active`.
+          schema:
+            type: string
+            enum: [active, closed]
+      responses:
+        '200':
+          description: Successful response with auction details.
+        '401':
+          description: Unauthorized due to missing or invalid token.
+        '404':
+          description: Auction not found.
+  /create:
+    post:
+      summary: Create a new auction
+      description: Allows a seller to create a new auction for a gacha item.
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token for authentication.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                seller_username:
+                  type: string
+                  description: Username of the seller.
+                gacha_name:
+                  type: string
+                  description: Name of the gacha item.
+                basePrice:
+                  type: number
+                  description: Base price for the auction.
+                endDate:
+                  type: string
+                  format: date-time
+                  description: Auction's end date in ISO 8601 format.
+              required: [seller_username, gacha_name, basePrice, endDate]
+      responses:
+        '200':
+          description: Auction created successfully.
+        '400':
+          description: Invalid input parameters.
+        '401':
+          description: Unauthorized due to missing or invalid token.
+        '404':
+          description: Error from profile service during gacha removal.
+        '503':
+          description: Service unavailable.
+  /modify:
+    patch:
+      summary: Modify an auction (Admin only)
+      description: Allows an admin to modify auction details.
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token for authentication.
+          schema:
+            type: string
+        - name: auction_id
+          in: query
+          required: true
+          description: ID of the auction to modify.
+          schema:
+            type: string
+        - name: seller_username
+          in: query
+          required: false
+          description: New seller username.
+          schema:
+            type: string
+        - name: gacha_name
+          in: query
+          required: false
+          description: New gacha name.
+          schema:
+            type: string
+        - name: basePrice
+          in: query
+          required: false
+          description: New base price for the auction.
+          schema:
+            type: number
+        - name: endDate
+          in: query
+          required: false
+          description: New end date in ISO 8601 format.
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Auction updated successfully.
+        '400':
+          description: Missing or invalid auction ID.
+        '401':
+          description: Unauthorized due to missing or invalid token.
+        '403':
+          description: Unauthorized due to insufficient permissions.
+        '404':
+          description: Auction not found.
+  /bid:
+    patch:
+      summary: Place a bid on an auction.
+      description: Allows a user to place a bid on an active auction.
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token for authentication.
+          schema:
+            type: string
+        - name: username
+          in: query
+          required: true
+          description: Username of the bidder.
+          schema:
+            type: string
+        - name: auction_id
+          in: query
+          required: true
+          description: ID of the auction to bid on.
+          schema:
+            type: string
+        - name: newBid
+          in: query
+          required: true
+          description: New bid amount.
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Bid placed successfully.
+        '400':
+          description: Invalid bid or parameters.
+        '401':
+          description: Unauthorized due to missing or invalid token.
+        '404':
+          description: Auction not found.
+        '503':
+          description: Service unavailable.
+
+  /gacha_receive:
+    post:
+      summary: Transfer a gacha item to the auction winner
+      description: Assigns the gacha item to the auction winner in their profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                auction_id:
+                  type: string
+                  description: ID of the auction.
+              required: [auction_id]
+      responses:
+        '200':
+          description: Gacha item transferred successfully.
+        '400':
+          description: Invalid input parameters.
+        '404':
+          description: Auction not found or no winner for the auction.
+        '503':
+          description: Service unavailable.
+
+  /auction_lost:
+    post:
+      summary: Refund bidders who lost the auction
+      description: Refunds all non-winning bidders for a specific auction.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                auction_id:
+                  type: string
+                  description: ID of the auction.
+              required: [auction_id]
+      responses:
+        '200':
+          description: Refund process completed with details of successful and failed refunds.
+        '400':
+          description: Invalid input parameters or auction status.
+        '404':
+          description: Auction not found or no bids found.
+        '503':
+          description: Service unavailable.
+
+  /auction_terminated:
+    post:
+      summary: Transfer funds to the auction seller
+      description: Transfers the final bid amount to the auction seller once the auction is closed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                auction_id:
+                  type: string
+                  description: ID of the auction.
+              required: [auction_id]
+      responses:
+        '200':
+          description: Funds transferred successfully to the seller.
+        '400':
+          description: No valid bids to transfer funds.
+        '404':
+          description: Auction not found.
+        '503':
+          description: Service unavailable.
+
+/close_auction:
+  post:
+    summary: Close an auction.
+    description: Closes an auction that has no bids and returns the gacha item to the seller. Only the seller of the auction can perform this operation, and the username must match the one in the authorization token.
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        description: Bearer token for authentication.
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              auction_id:
+                type: string
+                description: ID of the auction to close.
+              username:
+                type: string
+                description: Username of the seller attempting to close the auction. Must match the username in the token.
+            required: [auction_id, username]
+    responses:
+      '200':
+        description: Auction closed successfully.
+      '400':
+        description: Invalid parameters or auction cannot be closed due to existing bids.
+      '401':
+        description: Unauthorized due to missing or invalid token, or mismatched username.
+      '403':
+        description: Forbidden. The user is not the seller of the auction.
+      '404':
+        description: Auction not found.
+      '503':
+        description: Service unavailable.
+
+
+
+

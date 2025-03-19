@@ -1,0 +1,196 @@
+//// AUTHENTICATION /////
+//login
+curl -X POST "http://localhost:5002/login" \ 
+-H "Content-Type: application/json" \
+-d '{
+    "username": "user1",
+    "password": "1234"
+}'
+
+//// GACHASYSTEM SERVICE /////
+// add gacha
+curl -X POST http://localhost:5001/gachasystem_service/add_gacha \
+-F "gacha_name=doge" \
+-F "rarity=legendary" \
+-F "description=This is a rare gacha." \
+-F "image=@/Users/giacomo/Desktop/SSE-project/meme images/Doge-meme.jpg"
+
+// delete gacha
+curl -X DELETE "http://localhost:5004/delete_gacha?gacha_name=Trial%20gacha"
+
+// update gacha
+curl -X PUT http://localhost:5004/update_gacha \
+-H "Content-Type: multipart/form-data" \
+-F "gacha_name=Trial gacha" \
+-F "description=This is the first gacha!!!"
+
+// get gacha collection
+curl -X GET http://localhost:5004/get_gacha_collection
+// oppure
+curl -X GET "http://localhost:5004/get_gacha_collection?gacha_name=Trial Gacha"
+curl -X GET "http://localhost:5004/get_gacha_collection?gacha_name=Examplegacha"
+curl -X GET "http://localhost:5004/get_gacha_collection?gacha_name=Examplegacha,SuperGacha"
+
+
+// get gacha roll (livelli: standard, medium, premium)
+curl -X GET "http://localhost:5004/get_gacha_roll?level=standard"
+
+//// PAYMENT SERVICE /////
+//pay
+curl -X POST "http://localhost:5006/pay" \
+-H "Content-Type: application/x-www-form-urlencoded" \
+-H "Authorization: Bearer <ACCESS_TOKEN>" \
+-d "payer_us=player1" \
+-d "receiver_us=player2" \
+-d "amount=50"
+
+//buy currency
+curl -X POST "http://localhost:5006/buycurrency" \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <ACCESS_TOKEN>" \
+-d '{
+    "username": "player1",
+    "amount": "50",
+    "payment_method": "credit_card"
+}'
+
+// view trans
+curl -X GET "http://localhost:5006/viewTrans?username=player1" \
+-H "Authorization: Bearer <ACCESS_TOKEN>"
+
+
+// new balance
+curl -X POST http://localhost:5006/newBalance \
+  -F "username=user1"
+
+// buy currency
+curl -X POST http://localhost:5006/buycurrency \
+  -F "username=user1" \
+  -F "amount=10.0" \
+  -F "payment_method=credit_card"
+
+// get balance
+curl -X GET "http://localhost:5006/getBalance?username=user1"
+
+// VEDERE DB
+docker exec -it sse-project-db_payment-1 bash
+psql -U user -d trans_db
+SELECT * FROM balance;
+
+//// PROFILE SETTING //////
+// create profile
+curl -X POST http://localhost:5003/create_profile \
+  -H "Content-Type: application/json" \
+  -d '{"username": "user1", "profile_image": "default_image_url", "currency_balance": 60}'
+
+// retrieve gacha collection
+curl -X GET "http://localhost:5003/retrieve_gachacollection?username=user1"
+
+// insert gacha
+curl -X POST http://localhost:5003/insertGacha \
+  -H "Content-Type: application/json" \
+  -d '{"username": "user1", "gacha_name": "gacha_1", "collected_date": "2024-11-16"}'
+
+
+// create profile
+curl -X POST http://localhost:5003/create_profile \
+  -H "Content-Type: application/json" \
+  -d '{"username": "player1"}'
+
+// modify profile
+curl -X PATCH "http://localhost:5001/profile_setting/modify_profile" \
+     -F "username=player1" \
+     -F "image=@Users/giacomo/Desktop/SSE-project/profile_setting/ProfileImages/man1.png"
+
+
+// check profile
+curl -X GET "http://localhost:5001/profile_setting/checkprofile?username=player2"
+
+// VEDERE DB
+docker exec -it sse-project-profile_db-1 bash
+psql -U user -d profile_db
+SELECT * FROM gacha_items;
+
+
+////// GACHAROLL SERVICE /////
+// gacharoll
+curl -X POST http://localhost:5007/gacharoll \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vYXV0aF9zZXJ2aWNlOjUwMDIiLCJzdWIiOiJ1c2VyMSIsImF1ZCI6WyJwcm9maWxlX3NldHRpbmciLCJnYWNoYXN5c3RlbSIsInBheW1lbnRfc2VydmljZSIsImdhY2hhX3JvbGwiLCJhdWN0aW9uX3NlcnZpY2UiXSwiaWF0IjoxNzMyNTUwNjM4LCJleHAiOjE3MzI1NTQyMzgsInNjb3BlIjoidXNlciIsImp0aSI6Ijg4OTY0NjM2LWI3YmMtNGRmOC04OGM3LWZiZmViMzE2MWUwMyJ9.cagcXqZ6kHGGk7YZ4FYA-fj8AEj41dXqoywHq7eMwVTacLxdJXezNsUnmnyjKKhIJG2AtYW5beHPXy4KVJOWyz9jlMkuV7WIpcsWkxUXpJiCSruQwWia5fHEYCGDR9fHTcZmv8Pbct5bqQFCyxvZNKNvmsvL03_Pt3P_2fhb9JYkUhrqlSTGpL41q-xDwTMyhvXS0AG-aXL_ps7NrTPeaglnplhGrM8JZC8VyUwYuKrBhW3nQDCl8on1hr2M6IOtldn3K1WOerEQkFGl2G4nYygTmvalbwUilcUCQpZqCrhpUulZKhUBddKFsCiLuEMDNQvuBhd0cFBLDP1cgaH93j4ZnHjOaTBbe5demrGrdsLZHDL7UUpN7hOaZAfXmAMOs7y2vvHFDqeRz5v_D1_lrsqmJf6_5CP7kF-ww71jkizk_o66TsuA8lxofi9V9DTIQjh7mDt5BLA9FRH74kj0UsVuKtAe_w7ficya-JxbTw-kbTIF55zhTI-HAV9lpxN6uDWaPVTL8HHVta3_69bEqCzkRqbohoNfdc0BCZ-eHpWoKFPec56nBjLop5QIDWsXXPS7bnnkamaO23n-DGcQKqxSnXx-q8hIdLYTaSsOl9iifLzHUgfPJZPeHxgulIj9wq6D7TN2ZrIT1CLnS6hI4nHe8QzxQJ-ZoY4iRWD3OYM" \
+  -d '{"username": "user1", "level": "standard"}'
+
+
+
+////// AUCTION MARKET/////
+// see
+curl -X GET "http://localhost:5008/see"  ----------- curl -X GET "http://localhost:5001/auction_service/see"
+
+curl -X GET "http://localhost:5008/see" \
+-H "Authorization: Bearer <access_token>"
+
+
+// create
+curl -X POST "http://localhost:5001/auction_service/create" \
+curl -X POST "http://localhost:5008/create" \
+-H "Authorization: Bearer <access_token>" \
+-H "Content-Type: application/json" \
+-d '{
+    "seller_username": "player1",
+    "gacha_name": "doge",
+    "basePrice": 10.0,
+    "endDate": "2024-12-31T23:59:59"
+}'
+
+// modify
+curl -X PATCH "http://localhost:5008/modify?auction_id=1&seller_username=new_seller&gacha_name=new_gacha&endDate=2024-12-31T23:59:59&basePrice=15.0" \
+-H "Content-Type: application/json"
+
+curl -X PATCH "http://localhost:5008/modify?auction_id=1&basePrice=200" \
+-H "Authorization: Bearer <admin_access_token>" \
+-H "Content-Type: application/json"
+
+
+// bid
+curl -X PATCH "http://localhost:5008/bid?username=player1&auction_id=1&newBid=70.0" \
+-H "Content-Type: application/json"
+
+curl -X PATCH "http://localhost:5008/bid?username=player1&auction_id=1&newBid=70.0" \
+-H "Authorization: Bearer <access_token>" \
+-H "Content-Type: application/json"
+
+
+// gacha receive
+curl -X POST "http://localhost:5008/gacha_receive" \
+-H "Content-Type: application/json" \
+-d '{
+    "auction_id": 1
+}'
+
+// auction lost 
+curl -X POST "http://localhost:5008/auction_lost" \
+-H "Authorization: Bearer <access_token>" \
+-H "Content-Type: application/json" \
+-d '{
+    "auction_id": 1
+}'
+
+// auction terminated
+curl -X POST "http://localhost:5008/auction_terminated" \
+-H "Authorization: Bearer <access_token>" \
+-H "Content-Type: application/json" \
+-d '{
+    "auction_id": 1
+}'
+
+// close auction
+curl -X POST "http://localhost:5008/close_auction" \
+-H "Authorization: Bearer <access_token>" \
+-H "Content-Type: application/json" \
+-d '{
+    "auction_id": 1
+}'
+
+
+
+
+

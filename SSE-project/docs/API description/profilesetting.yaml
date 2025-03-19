@@ -1,0 +1,277 @@
+openapi: 3.0.0
+info:
+  title: Profile Setting API
+  version: 1.0.0
+  description: API for the managing user profiles, including their gacha collections.
+
+servers:
+  - url: http://localhost:5003/profile_setting
+paths:
+  /modify_profile:
+    patch:
+      summary: Modify a user profile
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication (e.g., `Bearer <token>`).
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The username of the user.
+                field:
+                  type: string
+                  description: The profile field to be modified.
+                value:
+                  type: string
+                  description: The new value for the specified field.
+                image:
+                  type: string
+                  format: binary
+                  description: The image to be uploaded.
+              required:
+                - username
+      responses:
+        '200':
+          description: Profile successfully updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  profile:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                      email:
+                        type: string
+                      profile_image:
+                        type: string
+                      currency_balance:
+                        type: number
+        '400':
+          description: Bad request due to invalid data.
+        '401':
+          description: Unauthorized access.
+        '403':
+          description: Forbidden due to a mismatch in the token and request data.
+        '404':
+          description: Profile not found.
+        '500':
+          description: Internal server error.
+
+  /checkprofile:
+    get:
+      summary: Retrieve user profile details
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication (e.g., `Bearer <token>`).
+        - in: query
+          name: username
+          required: true
+          schema:
+            type: string
+          description: The username of the user.
+      responses:
+        '200':
+          description: User profile retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+                  profile_image:
+                    type: string
+                  currency_balance:
+                    type: number
+        '400':
+          description: Bad request.
+        '401':
+          description: Unauthorized access.
+        '403':
+          description: Forbidden due to token mismatch.
+        '404':
+          description: Profile not found.
+
+  /retrieve_gachacollection:
+    get:
+      summary: Retrieve a user's Gacha collection.
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication (e.g., `Bearer <token>`).
+        - in: query
+          name: username
+          required: true
+          schema:
+            type: string
+          description: The username of the user.
+      responses:
+        '200':
+          description: Gacha collection retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gachas:
+                    type: array
+                    items:
+                      type: string
+                    description: List of Gacha items.
+        '400':
+          description: Bad request.
+        '401':
+          description: Unauthorized access.
+        '403':
+          description: Forbidden due to token mismatch.
+        '404':
+          description: User or Gacha collection not found.
+        '503':
+          description: Service unavailable.
+
+  /info_gachacollection:
+    get:
+      summary: Get details of a specific Gacha item.
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication (e.g., `Bearer <token>`).
+        - in: query
+          name: username
+          required: true
+          schema:
+            type: string
+          description: The username of the user.
+        - in: query
+          name: gacha_name
+          required: true
+          schema:
+            type: string
+          description: The name of the Gacha item.
+      responses:
+        '200':
+          description: Gacha item details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gacha_name:
+                    type: string
+                  details:
+                    type: object
+                    description: Details of the Gacha item.
+        '400':
+          description: Bad request.
+        '401':
+          description: Unauthorized access.
+        '403':
+          description: Forbidden due to token mismatch.
+        '404':
+          description: User or Gacha item not found.
+        '503':
+          description: Service unavailable.
+
+  /create_profile:
+    post:
+      summary: Create a new user profile.
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication (e.g., `Bearer <token>`).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The username of the new user.
+                email:
+                  type: string
+                  description: The email address of the user.
+                currency_balance:
+                  type: number
+                  default: 0
+                  description: Initial currency balance.
+                image:
+                  type: string
+                  format: binary
+                  description: Profile image to upload.
+              required:
+                - username
+                - email
+      responses:
+        '200':
+          description: Profile created successfully.
+        '400':
+          description: Bad request or profile already exists.
+        '500':
+          description: Internal server error.
+
+  /delete_profile:
+    delete:
+      summary: Delete a user profile.
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication (e.g., `Bearer <token>`).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The username of the user to delete.
+              required:
+                - username
+      responses:
+        '200':
+          description: Profile deleted successfully.
+        '400':
+          description: Bad request or user not found.
+        '401':
+          description: Unauthorized access.
+        '403':
+          description: Forbidden due to token mismatch.
+        '500':
+          description: Internal server error.
+
+

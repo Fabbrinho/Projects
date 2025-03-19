@@ -1,0 +1,231 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3 {
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input {
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#login-result, #signup-result, #logout-result {
+  margin-top: 10px;
+  color: red;
+}
+
+#menu-section {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.service-group {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.service-group h3 {
+  margin-bottom: 10px;
+  color: #007bff;
+  font-weight: bold;
+}
+
+#service-result {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+p {
+  font-size: 0.9rem;
+  color: #666;
+}
+#gacha-roll-result {
+  text-align: center;
+  margin-top: 20px;
+}
+
+
+.gacha-packages {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.gacha-package {
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #6c757d;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.gacha-package:hover {
+  background-color: #5a6268;
+  transform: scale(1.1);
+}
+
+#gacha-roll-animation {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #007bff;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#gacha-roll-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 10px auto;
+  display: block;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+}
+
+#gacha-roll-details {
+  font-size: 1.2rem;
+  color: #333;
+}
+/* Specific result sections */
+#payment-service-result,
+#account-service-result,
+#auction-service-result {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333;
+  font-size: 0.9rem;
+}
+/* Gacha System Result Styling */
+#gacha-system-result {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333;
+  font-size: 0.9rem;
+}
+.gacha-item img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px; /* Optional, per un look più morbido */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional, per un effetto migliore */
+}
+/* Profile Setting Service Results */
+.service-result {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #333;
+  background: #f9f9f9;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.service-result img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+#modify-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#modify-profile-form label {
+  font-weight: bold;
+}
+
+#modify-profile-form input,
+#modify-profile-form select {
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#modify-profile-result {
+  margin-top: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #333;
+}
+hr {
+  border: 0;
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
+}
+

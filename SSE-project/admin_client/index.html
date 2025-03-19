@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gacha LOLection</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Gacha LOLection for ADMIN</h1>
+    
+    <!-- Login Form -->
+    <div id="login-section">
+      <h2>Login</h2>
+      <form id="login-form">
+        <label for="login-username">Username:</label>
+        <input type="text" id="login-username" name="username" required>
+        <label for="login-password">Password:</label>
+        <input type="password" id="login-password" name="password" required>
+        <button type="submit">Login</button>
+      </form>
+      <div id="login-result"></div>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="signup-section">
+      <h2>Signup</h2>
+      <form id="signup-form">
+        <label for="signup-username">Username:</label>
+        <input type="text" id="signup-username" name="username" required>
+        <label for="signup-password">Password:</label>
+        <input type="password" id="signup-password" name="password" required>
+        <label for="signup-email">Email:</label>
+        <input type="email" id="signup-email" name="email" required>
+        <button type="submit">Signup</button>
+      </form>
+      <div id="signup-result"></div>
+    </div>
+
+    <!-- Service Menu -->
+    <div id="menu-section" style="display:none;">
+      <h2>Service Menu</h2>
+
+
+      <!-- Other Services Placeholder -->
+      <div class="service-group">
+        <h3>Other Services</h3>
+        <!-- Add buttons for other microservices here -->
+        <p>More services coming soon...</p>
+      </div>
+
+        <!-- Logout -->
+      <div class="service-group">
+        <h3>Account</h3>
+        <button id="logout-button">Logout</button>
+        <button id="delete-account-button">Delete Account</button>
+        <div id="logout-result"></div> <!-- Logout Result -->
+      </div>
+
+      <!-- Auction Service -->
+      <div class="service-group">
+        <h3>Auction Service</h3>
+        <button id="see-auctions-button">See Auctions</button>
+        <button id="modify-auction-button">Modify Auction</button>
+        <div id="auction-service-result"></div> <!-- Results for Auction Service -->
+      </div>
+
+        <!-- Gacha System Service -->
+      <div class="service-group">
+        <h3>Gacha System</h3>
+        <form id="addGachaForm" enctype="multipart/form-data">
+            <input type="text" name="gacha_name" id="gacha_name" placeholder="Gacha Name" required>
+            <input type="text" name="rarity" id="rarity" placeholder="Rarity" required>
+            <input type="text" name="description" id="description" placeholder="Description">
+            <input type="file" name="image" id="image" accept="image/*" required>
+            <button type="submit">Add Gacha</button>
+        </form>
+        <br><br>
+        <button id="delete-gacha-button">Delete Gacha</button>
+        <button id="update-gacha-button">Update Gacha</button>
+        <button id="get-collection-button">Get Gacha Collection</button>
+        <div id="gacha-system-result"></div> <!-- Results for Gacha System -->
+      </div>
+
+      <div id="service-result"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

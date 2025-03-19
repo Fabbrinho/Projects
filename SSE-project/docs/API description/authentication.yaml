@@ -1,0 +1,178 @@
+openapi: 3.0.0
+info:
+  title: Authentication API
+  version: 1.0.0
+  description: API for the authentication, which includes opeartion for creating/deleting account and login/logout.
+
+servers:
+  - url: https://localhost:5002/auth_service
+paths:
+  /signup:
+    post:
+      summary: Create a new account
+      requestBody:
+        description: Information required to create a new account.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Username of the new player.
+                email:
+                  type: string
+                  description: Email of the new player.
+                password:
+                  type: string
+                  description: Password of the new player.
+              required:
+                - username
+                - email
+                - password
+      responses:
+        '200':
+          description: Account created successfully.
+        '400':
+          description: Missing parameters.
+        '422':
+          description: Username already exists.
+        '500':
+          description: Failure in creating the profile of the user or its balance.
+        '503':
+          description: Service unavailable.
+
+  /login:
+    post:
+      summary: Login of a player/admin
+      requestBody:
+        description: Credentials for logging in.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Username of the player/admin.
+                password:
+                  type: string
+                  description: Password of the player/admin.
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Login successful, returns access and refresh tokens.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: JWT access token.
+                  refresh_token:
+                    type: string
+                    description: JWT refresh token.
+        '400':
+          description: Missing parameters.
+        '404':
+          description: Username doesn't exist.
+        '422':
+          description: Invalid credentials.
+
+  /logout:
+    delete:
+      summary: Logout of player/admin
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token used for authentication.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Logout successful.
+        '401':
+          description: Missing or invalid authorization header.
+        '404':
+          description: Refresh token not found.
+
+  /delete:
+    delete:
+      summary: Delete an existing account
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token used for authentication.
+          schema:
+            type: string
+      requestBody:
+        description: Information required to delete the account.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Username of the player to be deleted.
+                password:
+                  type: string
+                  description: Password of the player to be deleted.
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Account deleted successfully.
+        '400':
+          description: Missing parameters or error in the deletion process.
+        '403':
+          description: Username in token does not match the request username.
+        '404':
+          description: User not found or incorrect password.
+        '401':
+          description: Token expired or invalid.
+        '500':
+          description: Error while deleting associated profile or balance.
+        '503':
+          description: Service unavailable.
+
+  /newToken:
+    get:
+      summary: Generate a new access token using a valid refresh token
+      description: This route allows users to obtain a new access token by providing a valid refresh token. If the refresh token is valid and not revoked, a new access token is returned.
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token used for authentication (refresh token).
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A new access token is successfully generated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: The new JWT access token.
+        '400':
+          description: Invalid or missing refresh token.
+        '401':
+          description: The refresh token is expired or invalid.
+        '404':
+          description: The refresh token could not be found.
+        '500':
+          description: Internal error occurred while generating the new token.
+
