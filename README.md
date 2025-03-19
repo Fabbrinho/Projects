@@ -20,9 +20,8 @@ Feel free to explore the projects, learn from them, and contribute if you'd like
 
 ## Contact
 If you have any questions or want to discuss any of the projects, feel free to reach out:
-- 📧 Email: your.email@example.com
-- 🔗 LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/yourprofile)
-- 🐙 GitHub: [Your GitHub Profile](https://github.com/yourusername)
+- 📧 Email: fabbria8@gmail.com
+- 🐙 GitHub: (https://github.com/Fabbrinho)
 
 ---
 🚀 **Happy coding!**
