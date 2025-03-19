@@ -1,0 +1,22 @@
+1) AIA
+
+	-Approfondire la divisione in rischi: possibili attività in Italia/ requisiti di trasparenza di CHATGPT
+	- passi fatti dal 2019 --> approvata dal Parlamento Europeo il 14 Giugno 2023
+	- CLASS ACTION contro GOOGLE (12 Luglio 2023) :https://www.altalex.com/documents/news/2023/07/31/google-colpito-da-azione-legale-su-sviluppo-ia
+			stessi che hanno fatto causa a OPENAI per CHATGPT
+
+
+fonti: 	-https://avvocloud.net/blog/diritto-nuove-tecnologie/regolamento-europeo-intelligenza-artificiale#:~:text=La%20proposta%20di%20Regolamento%20Europeo,europea%20in%20materia%20di%20intelligenza
+	-https://www.europarl.europa.eu/news/it/headlines/society/20230601STO93804/normativa-sull-ia-la-prima-regolamentazione-sull-intelligenza-artificiale
+	-https://digital-strategy.ec.europa.eu/it/policies/regulatory-framework-ai#:~:text=La%20proposta%20di%20regolamento%20sull,affrontare%20per%20evitare%20risultati%20indesiderati.
+
+
+
+2) ENISA cybersecurity standard su 5g: Introduzione: 
+						• to provide an overview of standards, specifications and guidelines relevant to the
+							cybersecurity of the 5G ecosystem and that had been published, either as drafts or in their
+							final versions, by September 2021;
+						• to facilitate the positioning and to assess the applicability of any reference document in the 5G
+							security environment;
+						• to formulate recommendations on standardisation in the area of 5G security. 
+					Da studiare tutto il documento
